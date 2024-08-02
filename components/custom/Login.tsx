@@ -7,54 +7,55 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
-import {Button} from "../ui/button";
-import {useEffect, useState} from "react";
+import { Button } from "../ui/button";
+import { useEffect, useState } from "react";
 import { Input } from "../ui/input";
 import { login } from "@/actions/action";
+import { z } from "zod";
+import { BeatLoader } from "react-spinners";
+import Error from "./error";
 // import useFetch from "@/hooks/use-fetch";
 // import {UrlState} from "@/context";
 
 const Login = () => {
-//   let [searchParams] = useSearchParams();
-//   const longLink = searchParams.get("createNew");
+  //   let [searchParams] = useSearchParams();
+  //   const longLink = searchParams.get("createNew");
 
-//   const navigate = useNavigate();
-interface FormData {
+  //   const navigate = useNavigate();
+  interface FormData {
     email: string;
     password: string;
   }
-  
 
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState<string[]>([]);
   const [formData, setFormData] = useState<FormData>({
     email: "",
     password: "",
   });
+  const loading = true;
 
-  const handleInputChange = (e:React.ChangeEvent<HTMLInputElement>) => {
-    const {name, value} = e.target;
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
     setFormData((prevState) => ({
       ...prevState,
       [name]: value,
     }));
   };
 
-//   const {loading, error, fn: fnLogin, data} = useFetch(login, formData);
-//   const {fetchUser} = UrlState();
-
-//   useEffect(() => {
-//     if (error === null && data) {
-//       fetchUser();
-//       navigate(`/dashboard?${longLink ? `createNew=${longLink}` : ""}`);
-//     }
-//     // eslint-disable-next-line react-hooks/exhaustive-deps
-//   }, [error, data]);
-
   const handleLogin = async () => {
-    console.log(formData)
-
-    const pass = await login(formData)
-    console.log(pass)
+    setErrors([]);
+    const schema = z.object({
+      email: z.string().email("Email is required").min(5),
+      password: z.string().min(6, "Password must be at least 6 characters"),
+    });
+    const result = schema.safeParse(formData);
+    if (!result.success) {
+      const errorMessages = result.error.errors.map((err) => err.message);
+      setErrors(errorMessages);
+      console.log(errorMessages);
+    } else {
+      console.log("Form data is valid:", result.data);
+    }
   };
 
   return (
@@ -64,7 +65,6 @@ interface FormData {
         <CardDescription>
           to your account if you already have one
         </CardDescription>
-        {/* {error && <Error message={error.message} />} */}
       </CardHeader>
       <CardContent className="space-y-2">
         <div className="space-y-1">
@@ -75,7 +75,6 @@ interface FormData {
             onChange={handleInputChange}
           />
         </div>
-        {/* {errors.email && <Error message={errors.email} />} */}
         <div className="space-y-1">
           <Input
             name="password"
@@ -84,14 +83,17 @@ interface FormData {
             onChange={handleInputChange}
           />
         </div>
-        {/* {errors.password && <Error message={errors.password} />} */}
       </CardContent>
       <CardFooter>
         <Button onClick={handleLogin}>
-          {/* {loading ? <BeatLoader size={10} color="#36d7b7" /> : "Login"} */}
-          Login
+          {loading ? <BeatLoader size={10} color="#36d7b7" /> : "Login"}
         </Button>
       </CardFooter>
+      <ul className="ml-8"> 
+        {errors?.map((item) => {
+          return <Error message={item} />;
+        })}
+      </ul>
     </Card>
   );
 };

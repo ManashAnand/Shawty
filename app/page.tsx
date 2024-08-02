@@ -52,7 +52,7 @@ export default function Home() {
         height={500}
         fill={true}
       /> */}
-      <Accordion type="multiple" collapsible className="w-full md:px-11">
+      <Accordion type="single" collapsible className="w-full md:px-11">
         <AccordionItem value="item-1">
           <AccordionTrigger>
             How does the Shawty URL shortener works?
