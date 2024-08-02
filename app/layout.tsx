@@ -16,7 +16,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+      <main className="min-h-screen container">
+        
+        {children}
+      </main>
+      <div className="p-10 text-center bg-gray-800 mt-10">
+        Made with 💗 by Manash Anand
+      </div>
+        </body>
     </html>
   );
 }
