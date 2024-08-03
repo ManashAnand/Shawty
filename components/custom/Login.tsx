@@ -13,7 +13,8 @@ import { Input } from "../ui/input";
 import { login } from "@/actions/action";
 import { z } from "zod";
 import { BeatLoader } from "react-spinners";
-import Error from "./error";
+import Error from "./Error";
+import useFetch from "@/hooks/useFetch";
 // import useFetch from "@/hooks/use-fetch";
 // import {UrlState} from "@/context";
 
@@ -32,7 +33,6 @@ const Login = () => {
     email: "",
     password: "",
   });
-  const loading = true;
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -54,7 +54,18 @@ const Login = () => {
       setErrors(errorMessages);
       console.log(errorMessages);
     } else {
-      console.log("Form data is valid:", result.data);
+      // console.log("Form data is valid:", result.data);
+      try {
+        const response = await login(formData);
+        // console.log(res)
+        if (!response.success) {
+          // const errorMessages = errors.push(response.error)
+          const errorMessages = [...errors, response.error];
+          setErrors(errorMessages);
+          return;
+        }
+        console.log(response.data);
+      } catch (error) {}
     }
   };
 
@@ -86,10 +97,10 @@ const Login = () => {
       </CardContent>
       <CardFooter>
         <Button onClick={handleLogin}>
-          {loading ? <BeatLoader size={10} color="#36d7b7" /> : "Login"}
+          {true ? <BeatLoader size={10} color="#36d7b7" /> : "Login"}
         </Button>
       </CardFooter>
-      <ul className="ml-8"> 
+      <ul className="ml-8">
         {errors?.map((item) => {
           return <Error message={item} />;
         })}

@@ -36,7 +36,7 @@ const useFetch = <T,>(
     }
   };
 
-  return { data, fn, loading, error };
+  return { data, loading, error, fn };
 };
 
 export default useFetch;
