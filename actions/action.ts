@@ -1,8 +1,5 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
-
 import { cookies } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
 interface FormDataForLogin {
@@ -12,11 +9,14 @@ interface FormDataForLogin {
 
 interface FormDataForSignup extends FormDataForLogin {
   name: string;
-  profile_pic: string;
 }
 
 const cookieStore = cookies();
-const supabase = createClient(cookieStore);
+ const supabase = createClient(cookieStore);
+
+
+
+ 
 export async function login(formData: FormDataForLogin) {
   // type-casting here for convenience
   // in practice, you should validate your inputs
@@ -39,27 +39,27 @@ export async function login(formData: FormDataForLogin) {
   return res;
 }
 
-export async function signup(formData: FormDataForSignup) {
-  const { email, password, name, profile_pic } = formData;
+export async function signup(formData: FormDataForSignup, filePathUrl: string) {
+  // const { email, password, name } = formData;
+  const allData: { [key: string]: string } = {};
+// @ts-ignore
+for (const [key, value] of formData.entries()) {
+  allData[key] = value;
+}
 
-  const fileName = `dp-${name.split(" ").join("-")}-${Math.random()}`;
-  const { error: storageError } = await supabase.storage
-    .from("profile_pic")
-    .upload(fileName, profile_pic);
-
-  if (storageError) throw new Error(storageError.message);
-
+const { name, email, password } = allData;
+console.log(name,email,password)
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
     options: {
       data: {
         name,
-        profile_pic:`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile_pic/${fileName}`
+        profile_pic: filePathUrl,
       },
     },
   });
-
+  console.log(data)
   const res = { success: true, error: "", data: {} };
   if (error) {
     // console.log(error)
