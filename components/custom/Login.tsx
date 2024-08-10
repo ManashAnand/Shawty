@@ -8,24 +8,30 @@ import {
   CardTitle,
 } from "../ui/card";
 import { Button } from "../ui/button";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Input } from "../ui/input";
 import { login } from "@/actions/action";
 import { z } from "zod";
 import { BeatLoader } from "react-spinners";
 import Error from "./Error";
-import useFetch from "@/hooks/useFetch";
-// import useFetch from "@/hooks/use-fetch";
-// import {UrlState} from "@/context";
+import { useMutation, UseMutationResult } from "@tanstack/react-query";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const Login = () => {
-  //   let [searchParams] = useSearchParams();
-  //   const longLink = searchParams.get("createNew");
+  const router = useRouter();
 
-  //   const navigate = useNavigate();
+  const searchParams = useSearchParams();
+  const longLink = searchParams.get('createNew')
   interface FormData {
     email: string;
     password: string;
+  }
+
+  interface LoginResponse {
+    isLoading: Boolean;
+    success: boolean;
+    error: string;
+    data: {};
   }
 
   const [errors, setErrors] = useState<string[]>([]);
@@ -42,30 +48,46 @@ const Login = () => {
     }));
   };
 
+  const mutation = useMutation<LoginResponse, Error, FormData>({
+    //@ts-ignore
+    mutationFn: login, // Define the mutation function here
+    onError: (error: Error) => {
+      setErrors([error.message || "Login failed. Please try again."]);
+    },
+  });
+
   const handleLogin = async () => {
     setErrors([]);
+
     const schema = z.object({
-      email: z.string().email("Email is required").min(5),
+      email: z
+        .string()
+        .email("Invalid email address")
+        .min(5, "Email is required"),
       password: z.string().min(6, "Password must be at least 6 characters"),
     });
+
     const result = schema.safeParse(formData);
+
     if (!result.success) {
       const errorMessages = result.error.errors.map((err) => err.message);
       setErrors(errorMessages);
       console.log(errorMessages);
     } else {
-      // console.log("Form data is valid:", result.data);
       try {
-        const response = await login(formData);
-        // console.log(res)
+        const response = await mutation.mutateAsync(formData);
+
         if (!response.success) {
-          // const errorMessages = errors.push(response.error)
-          const errorMessages = [...errors, response.error];
-          setErrors(errorMessages);
+          setErrors([response.error || "Login failed."]);
           return;
         }
+
         console.log(response.data);
-      } catch (error) {}
+
+        router.push(`/dashboard?${longLink ? `createNew=${longLink}`:""}`)
+      } catch (error) {
+        console.log("An unexpected error occurred:", error);
+      }
     }
   };
 
@@ -96,14 +118,20 @@ const Login = () => {
         </div>
       </CardContent>
       <CardFooter>
-        <Button onClick={handleLogin}>
-          {true ? <BeatLoader size={10} color="#36d7b7" /> : "Login"}
+        {/* @ts-ignore */}
+        <Button onClick={handleLogin} disabled={mutation.isLoading}>
+          {/* @ts-ignore */}
+          {mutation.isLoading ? (
+            <BeatLoader size={10} color="#36d7b7" />
+          ) : (
+            "Login"
+          )}
         </Button>
       </CardFooter>
       <ul className="ml-8">
-        {errors?.map((item) => {
-          return <Error message={item} />;
-        })}
+        {errors.map((item, index) => (
+          <Error key={index} message={item} />
+        ))}
       </ul>
     </Card>
   );
