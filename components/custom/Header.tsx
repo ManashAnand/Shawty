@@ -16,10 +16,17 @@ import {
     DropdownMenuTrigger,
   } from "@/components/ui/dropdown-menu";
   import {Avatar, AvatarFallback, AvatarImage} from "@radix-ui/react-avatar";
+import { useAuthenticateState } from "@/actions/zustand";
 
 const Header = () => {
   const router = useRouter();
   const user = false;
+  const isAuth = useAuthenticateState(
+    (state) => state.isAuthenticatad
+  );
+  const ToggleAuthenitcation = useAuthenticateState(
+    (state) => state.ToogleAuth
+  );
   return (
     <>
       <nav className="py-4 flex justify-between items-center">
@@ -33,7 +40,7 @@ const Header = () => {
           />
         </Link>
         <div className="flex gap-4">
-          {!user ? (
+          {!isAuth ? (
             <Button onClick={() => router.push("/auth")}>Login</Button>
           ) : (
             <DropdownMenu>
@@ -64,7 +71,7 @@ const Header = () => {
                   className="text-red-400"
                 >
                   <LogOut className="mr-2 h-4 w-4" />
-                  <span>Logout</span>
+                  <span onClick={() => ToggleAuthenitcation(false)}>Logout</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

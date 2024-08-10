@@ -1,6 +1,10 @@
-import React from 'react'
+"use client";
+import { useRedirectTo } from '@/hooks/useRediirectHook';
+import React, { useEffect } from 'react'
 
 const Dashboard = () => {
+   
+  useRedirectTo();
   return (
     <div>Dashboard</div>
   )

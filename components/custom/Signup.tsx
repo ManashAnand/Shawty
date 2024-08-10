@@ -16,7 +16,7 @@ import Error from "./Error";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { signup } from "@/actions/action";
-import { create } from 'zustand'
+import { create } from "zustand";
 import { useAuthenticateState } from "@/actions/zustand";
 
 const Signup = () => {
@@ -24,39 +24,37 @@ const Signup = () => {
   const searchParams = useSearchParams();
   const longLink = searchParams.get("createNew");
 
-  const ToggleLoading = useAuthenticateState(state => state.ToogleLoading)
-  const mainLoading = useAuthenticateState(state => state.loading)
+  const ToggleLoading = useAuthenticateState((state) => state.ToogleLoading);
+  const ToggleAuthenitcation = useAuthenticateState(
+    (state) => state.ToogleAuth
+  );
   const supabase = createClientComponentClient();
 
-  if(mainLoading) return "Loading...."
   interface FormData {
     email: string;
     password: string;
     name: string;
-    profile_pic: File | null;
+    profile_pic?: File | null;
   }
 
-
-
   const uploadFile = async (file: any) => {
-    // const file = event.target.files[0];
     const bucket = "profile_pic";
-
-    // Call Storage API to upload file
+    console.log(file);
+    if (!file) {
+      alert("please select file");
+      ToggleLoading(false)
+      return;
+    }
     const { data, error } = await supabase.storage
       .from(bucket)
       .upload(file.name, file);
 
-    // Handle error if upload failed
     if (error) {
-      // alert("Error uploading file.");
       // @ts-ignore
       setErrors(error.message);
-      console.log(error)
+      console.log(error);
       return;
     }
-
-    // alert('File uploaded successfully!');
     console.log(data);
     return data;
   };
@@ -75,11 +73,11 @@ const Signup = () => {
       ...prevState,
       [name]: files ? files[0] : value,
     }));
+    // console.log(name, value, files);
   };
 
   const handleSignup = async () => {
     setErrors([]);
-    ToggleLoading(true)
 
     const schema = z.object({
       email: z
@@ -91,37 +89,52 @@ const Signup = () => {
     });
 
     const result = schema.safeParse(formData);
-
+    console.log(formData);
     if (!result.success) {
       const errorMessages = result.error.errors.map((err) => err.message);
       setErrors(errorMessages);
     } else {
       try {
-        const formDataToSend = new FormData();
-        const {name,email,password} = formData
-        formDataToSend.append("name", name);
-        formDataToSend.append("email", email);
-        formDataToSend.append("password", password);
+        ToggleLoading(true);
+        console.log(formData);
         const fileData = await uploadFile(formData.profile_pic);
         // @ts-ignore
+
         const filePathUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${fileData?.fullPath}`;
         // console.log(formDataToSend)
+        const {name,email,password} = formData
+        const newFormData = new FormData()
+        newFormData.append("name",name)
+        newFormData.append("email",email)
+        newFormData.append("password",password)
+        console.log(formData)
+        // console.log(newFormData)
+        // return
         // @ts-ignore
-        const response = await signup(formDataToSend, filePathUrl);
-        console.log(response)
-        // @ts-ignore
+        const response = await signup(newFormData, filePathUrl);
+        console.log(response);
         // const result = await response.json();
 
-        // if (!result.success) {
-        //   setErrors([result.error || "Signup failed."]);
-        //   return;
-        // }
+        if (!result.success) {
+          // @ts-ignore
+          setErrors([result.error || "Signup failed."]);
+          return;
+        }
 
-        // router.push(`/dashboard?${longLink ? `createNew=${longLink}` : ""}`);
+        if (result.success){
+          console.log("User created");
+          ToggleAuthenitcation(true)
+        }
+          
+
+        ToggleLoading(false);
+        router.push(`/dashboard?${longLink ? `createNew=${longLink}` : ""}`);
       } catch (error) {
         console.log("An unexpected error occurred:", error);
+
+        ToggleLoading(false);
       } finally {
-        ToggleLoading(false)
+        ToggleLoading(false);
       }
     }
   };
@@ -160,7 +173,12 @@ const Signup = () => {
           />
         </div>
         <div className="space-y-1">
-          <Input name="profile_pic" type="file" accept="image/*" />
+          <Input
+            name="profile_pic"
+            type="file"
+            accept="image/*"
+            onChange={handleInputChange}
+          />
         </div>
       </CardContent>
       <CardFooter>

@@ -22,7 +22,7 @@ const Login = () => {
   const router = useRouter();
 
   const searchParams = useSearchParams();
-  const longLink = searchParams.get('createNew')
+  const longLink = searchParams.get("createNew");
   interface FormData {
     email: string;
     password: string;
@@ -40,8 +40,10 @@ const Login = () => {
     email: "",
     password: "",
   });
-  const ToggleLoading = useAuthenticateState(state => state.ToogleLoading)
-
+  const ToggleLoading = useAuthenticateState((state) => state.ToogleLoading);
+  const ToggleAuthenitcation = useAuthenticateState(
+    (state) => state.ToogleAuth
+  );
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -59,12 +61,9 @@ const Login = () => {
     },
   });
 
-
-
-
   const handleLogin = async () => {
     setErrors([]);
-    ToggleLoading(true)
+    ToggleLoading(true);
 
     const schema = z.object({
       email: z
@@ -88,15 +87,16 @@ const Login = () => {
           setErrors([response.error || "Login failed."]);
           return;
         }
-        
-    ToggleLoading(false)
+
+        ToggleLoading(false);
+        ToggleAuthenitcation(true);
         console.log(response.data);
-        router.push(`/dashboard?${longLink ? `createNew=${longLink}`:""}`)
+        router.push(`/dashboard?${longLink ? `createNew=${longLink}` : ""}`);
       } catch (error) {
         console.log("An unexpected error occurred:", error);
       }
     }
-    ToggleLoading(false)
+    ToggleLoading(false);
   };
 
   return (
