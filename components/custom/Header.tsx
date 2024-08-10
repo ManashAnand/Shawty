@@ -5,28 +5,28 @@ import React from "react";
 import logo from "../../public/logo.jpg";
 import Image from "next/image";
 import { Button } from "../ui/button";
-import {LinkIcon, LogOut} from "lucide-react";
+import { LinkIcon, LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
 import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-  } from "@/components/ui/dropdown-menu";
-  import {Avatar, AvatarFallback, AvatarImage} from "@radix-ui/react-avatar";
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { useAuthenticateState } from "@/actions/zustand";
+import { logout } from "@/actions/action";
 
 const Header = () => {
   const router = useRouter();
-  const user = false;
-  const isAuth = useAuthenticateState(
-    (state) => state.isAuthenticatad
-  );
+  const isAuth = useAuthenticateState((state) => state.isAuthenticatad);
   const ToggleAuthenitcation = useAuthenticateState(
     (state) => state.ToogleAuth
   );
+  const user = useAuthenticateState((state) => state.user);
+  console.log(user);
   return (
     <>
       <nav className="py-4 flex justify-between items-center">
@@ -44,15 +44,18 @@ const Header = () => {
             <Button onClick={() => router.push("/auth")}>Login</Button>
           ) : (
             <DropdownMenu>
-              <DropdownMenuTrigger className="w-10 rounded-full overflow-hidden">
+              <DropdownMenuTrigger className="w-10 h-10 rounded-full ">
                 <Avatar>
-                  <img src="../../public/logo.jpg" />
+                  <img
+                    src={user?.user?.user_metadata?.profile_pic || ""}
+                    className="rounded-full overflow-hidden object-contain"
+                  />
                   <AvatarFallback>PA</AvatarFallback>
                 </Avatar>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
                 <DropdownMenuLabel>
-                  { "Manash"}
+                  {user?.user?.user_metadata?.name}
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>
@@ -62,23 +65,21 @@ const Header = () => {
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem
-                //   onClick={() => {
-                //     fnLogout().then(() => {
-                //       fetchUser();
-                //       navigate("/auth");
-                //     });
-                //   }}
+                  onClick={() => {
+                    logout();
+                    ToggleAuthenitcation(false);   
+                    router.push("/");
+                  }}
                   className="text-red-400"
                 >
                   <LogOut className="mr-2 h-4 w-4" />
-                  <span onClick={() => ToggleAuthenitcation(false)}>Logout</span>
+                  <span>Logout</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           )}
         </div>
       </nav>
-      {/* {loading && <BarLoader className="mb-4" width={"100%"} color="#36d7b7" />} */}
     </>
   );
 };

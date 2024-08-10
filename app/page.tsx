@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/accordion";
 import { useRouter } from "next/navigation";
 import banner from '../public/banner.jpg'
+import { BentoGrid } from "@/components/custom/BentoGrid";
 
 
 export default function Home() {
@@ -52,6 +53,11 @@ export default function Home() {
         height={500}
         fill={true}
       /> */}
+
+
+        <BentoGrid/>
+
+
       <Accordion type="single" collapsible className="w-full md:px-11">
         <AccordionItem value="item-1">
           <AccordionTrigger>

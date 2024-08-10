@@ -2,8 +2,6 @@
 
 import { cookies } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
-import { create } from "zustand";
-import { useAuthenticateState } from "./zustand";
 interface FormDataForLogin {
   email: string;
   password: string;
@@ -19,7 +17,7 @@ const supabase = createClient(cookieStore);
 export async function login(formData: FormDataForLogin) {
   // type-casting here for convenience
   // in practice, you should validate your inputs
- 
+
   try {
     const { email, password } = formData;
     const { data, error } = await supabase.auth.signInWithPassword({
@@ -39,8 +37,8 @@ export async function login(formData: FormDataForLogin) {
     return res;
   } catch (error) {
     console.log(error);
-    return {error:error,success:false}
-  } 
+    return { error: error, success: false };
+  }
 }
 
 export async function signup(formData: FormDataForSignup, filePathUrl: string) {
@@ -74,6 +72,11 @@ export async function signup(formData: FormDataForSignup, filePathUrl: string) {
   }
   res.data = data;
   return res;
+}
+
+export async function logout() {
+  const { error } = await supabase.auth.signOut();
+  if (error) throw new Error(error.message);
 }
 
 export async function getCurrentUser() {

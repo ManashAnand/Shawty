@@ -8,9 +8,12 @@ import Login from "@/components/custom/Login";
 import Signup from "@/components/custom/Signup";
 import { useAuthenticateState } from "@/actions/zustand";
 import { CircleLoader } from "react-spinners";
+import { useRedirectTo } from "@/hooks/useRediirectHook";
 
 const auth = () => {
   // const searchParams = "manash";
+  useRedirectTo("auth","dashboard")
+  
   const searchParams = useSearchParams();
 
   

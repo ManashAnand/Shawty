@@ -28,6 +28,8 @@ const Signup = () => {
   const ToggleAuthenitcation = useAuthenticateState(
     (state) => state.ToogleAuth
   );
+  const ToggleUser = useAuthenticateState(state => state.ToogleUser)
+
   const supabase = createClientComponentClient();
 
   interface FormData {
@@ -53,10 +55,10 @@ const Signup = () => {
       // @ts-ignore
       setErrors(error.message);
       console.log(error);
-      return;
+      return {data:error,success: false};
     }
     console.log(data);
-    return data;
+    return {data,success:true};
   };
 
   const [errors, setErrors] = useState<string[]>([]);
@@ -98,9 +100,14 @@ const Signup = () => {
         ToggleLoading(true);
         console.log(formData);
         const fileData = await uploadFile(formData.profile_pic);
+        if(!fileData?.success){
+          // @ts-ignore
+          alert(fileData?.error?.message ?? "Same image exists")
+          return
+        }
         // @ts-ignore
 
-        const filePathUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${fileData?.fullPath}`;
+        const filePathUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${fileData?.data?.fullPath}`;
         // console.log(formDataToSend)
         const {name,email,password} = formData
         const newFormData = new FormData()
@@ -124,6 +131,7 @@ const Signup = () => {
         if (result.success){
           console.log("User created");
           ToggleAuthenitcation(true)
+          ToggleUser(result.success)
         }
           
 

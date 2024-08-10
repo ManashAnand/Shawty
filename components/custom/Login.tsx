@@ -44,6 +44,7 @@ const Login = () => {
   const ToggleAuthenitcation = useAuthenticateState(
     (state) => state.ToogleAuth
   );
+  const ToogleUser = useAuthenticateState((state) => state.ToogleUser);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -63,7 +64,6 @@ const Login = () => {
 
   const handleLogin = async () => {
     setErrors([]);
-    ToggleLoading(true);
 
     const schema = z.object({
       email: z
@@ -84,13 +84,18 @@ const Login = () => {
         const response = await mutation.mutateAsync(formData);
 
         if (!response.success) {
-          setErrors([response.error || "Login failed."]);
+          const err = ["Invalid credentials"];
+
+          setErrors(err);
+          console.log(errors);
+       
           return;
         }
 
         ToggleLoading(false);
         ToggleAuthenitcation(true);
         console.log(response.data);
+        ToogleUser(response.data);
         router.push(`/dashboard?${longLink ? `createNew=${longLink}` : ""}`);
       } catch (error) {
         console.log("An unexpected error occurred:", error);
