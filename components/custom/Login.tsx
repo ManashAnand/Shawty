@@ -8,7 +8,7 @@ import {
   CardTitle,
 } from "../ui/card";
 import { Button } from "../ui/button";
-import { useState } from "react";
+import { useActionState, useState } from "react";
 import { Input } from "../ui/input";
 import { login } from "@/actions/action";
 import { z } from "zod";
@@ -16,6 +16,7 @@ import { BeatLoader } from "react-spinners";
 import Error from "./Error";
 import { useMutation, UseMutationResult } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useAuthenticateState } from "@/actions/zustand";
 
 const Login = () => {
   const router = useRouter();
@@ -39,6 +40,8 @@ const Login = () => {
     email: "",
     password: "",
   });
+  const ToggleLoading = useAuthenticateState(state => state.ToogleLoading)
+
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -56,8 +59,12 @@ const Login = () => {
     },
   });
 
+
+
+
   const handleLogin = async () => {
     setErrors([]);
+    ToggleLoading(true)
 
     const schema = z.object({
       email: z
@@ -81,14 +88,15 @@ const Login = () => {
           setErrors([response.error || "Login failed."]);
           return;
         }
-
+        
+    ToggleLoading(false)
         console.log(response.data);
-
         router.push(`/dashboard?${longLink ? `createNew=${longLink}`:""}`)
       } catch (error) {
         console.log("An unexpected error occurred:", error);
       }
     }
+    ToggleLoading(false)
   };
 
   return (

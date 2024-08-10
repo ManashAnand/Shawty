@@ -6,10 +6,18 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useSearchParams } from "next/navigation";
 import Login from "@/components/custom/Login";
 import Signup from "@/components/custom/Signup";
+import { useAuthenticateState } from "@/actions/zustand";
+import { CircleLoader } from "react-spinners";
 
 const auth = () => {
   // const searchParams = "manash";
   const searchParams = useSearchParams();
+
+  
+  const mainLoading = useAuthenticateState(state => state.loading)
+
+  if(mainLoading) return <div className="w-full flex justify-center items-center min-h-screen">
+            <CircleLoader size={50} color="#36d7b7" /></div>
   return (
     <>
       <div className="mt-36 flex flex-col items-center gap-10">

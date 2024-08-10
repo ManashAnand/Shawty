@@ -16,20 +16,27 @@ import Error from "./Error";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { signup } from "@/actions/action";
+import { create } from 'zustand'
+import { useAuthenticateState } from "@/actions/zustand";
 
 const Signup = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const longLink = searchParams.get("createNew");
 
+  const ToggleLoading = useAuthenticateState(state => state.ToogleLoading)
+  const mainLoading = useAuthenticateState(state => state.loading)
   const supabase = createClientComponentClient();
 
+  if(mainLoading) return "Loading...."
   interface FormData {
     email: string;
     password: string;
     name: string;
     profile_pic: File | null;
   }
+
+
 
   const uploadFile = async (file: any) => {
     // const file = event.target.files[0];
@@ -72,6 +79,7 @@ const Signup = () => {
 
   const handleSignup = async () => {
     setErrors([]);
+    ToggleLoading(true)
 
     const schema = z.object({
       email: z
@@ -112,6 +120,8 @@ const Signup = () => {
         // router.push(`/dashboard?${longLink ? `createNew=${longLink}` : ""}`);
       } catch (error) {
         console.log("An unexpected error occurred:", error);
+      } finally {
+        ToggleLoading(false)
       }
     }
   };
