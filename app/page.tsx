@@ -13,6 +13,7 @@ import {
 import { useRouter } from "next/navigation";
 import banner from '../public/banner.jpg'
 import { BentoGrid } from "@/components/custom/BentoGrid";
+import { Spotlight } from "@/components/ui/Spotlight";
 
 
 export default function Home() {
@@ -24,13 +25,29 @@ export default function Home() {
     e.preventDefault();
     if (longUrl) router.push(`/auth?createNew=${longUrl}`);
   };
-
+  
   return <>
      <div className="flex flex-col items-center">
-      <h2 className="my-10 sm:my-16 text-3xl sm:text-6xl lg:text-7xl text-white text-center font-extrabold">
-        The only URL Shortener <br /> you&rsquo;ll ever need! 👇
-      </h2>
-      <form
+      {/* <h2 className="my-10 sm:my-16 text-3xl sm:text-6xl lg:text-7xl text-white text-center font-extrabold">
+  The only URL Shortener <br /> you&rsquo;ll ever need! 👇
+      </h2> */}
+
+
+<div className="h-[30rem] w-full rounded-md flex md:items-center md:justify-center bg-transparent antialiased bg-grid-white/[0.02] relative overflow-hidden">
+      <Spotlight
+        className="-top-40 left-0 md:left-60 md:-top-20"
+        fill="white"
+      />
+      <div className=" p-4 max-w-7xl  mx-auto relative z-10  w-full pt-20 md:pt-0">
+        <h1 className="text-4xl md:text-7xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400 bg-opacity-50">
+          Short Url&rsquo;s <br /> is the new trend.
+        </h1>
+        <div className="mt-4 font-normal text-base text-neutral-300 flex justify-center items-center text-center mx-auto">
+          {/* Spotlight effect is a great way to draw attention to a specific part
+          of the page. Here, we are drawing the attention towards the text
+          section of the page. I don&apos;t know why but I&apos;m running out of
+          copy. */}
+           <form
         onSubmit={handleShorten}
         className="sm:h-14 flex flex-col sm:flex-row w-full md:w-2/4 gap-2"
       >
@@ -45,6 +62,13 @@ export default function Home() {
           Shorten!
         </Button>
       </form>
+        </div>
+        
+      </div>
+    </div>
+
+
+     
       {/* <Image
         src={banner} // replace with 2 in small screens
         className="w-full my-11 md:px-11"

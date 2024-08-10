@@ -153,7 +153,7 @@ const AboutBlock = () => (
       <span className="text-zinc-400">
         I deal primarily with full Stack. I love
         this stack so much that I have built ton of website . I've work with over
-        a 4 enterprise on this subject across globe .
+        4 enterprise on this subject across globe .
       </span>
     </p>
   </Block>
