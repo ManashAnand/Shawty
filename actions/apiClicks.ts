@@ -1,12 +1,13 @@
+"use server";
 import { createClient } from "@/utils/supabase/server";
 import { cookies } from "next/headers";
 
 const cookieStore = cookies();
 const supabase = createClient(cookieStore);
 
-export async function getClicksForUrl(url_ids: Array<string>[]) {
+export async function getClicksForUrl(url_ids: string[]) {
     const { data, error } = await supabase
-      .from("urls")
+      .from("clicks")
       .select("*")
       .in("url_id",url_ids)
   
