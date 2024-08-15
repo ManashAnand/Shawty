@@ -1,9 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import {Button} from "@/components/ui/button";
-import {Input} from "@/components/ui/input";
-import {useState} from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useState } from "react";
 import {
   Accordion,
   AccordionContent,
@@ -11,65 +11,60 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { useRouter } from "next/navigation";
-import banner from '../public/banner.jpg'
+import banner from "../public/banner.jpg";
 import { BentoGrid } from "@/components/custom/BentoGrid";
 import { Spotlight } from "@/components/ui/Spotlight";
 
-
 export default function Home() {
-
   const [longUrl, setLongUrl] = useState("");
-  const router = useRouter()
+  const router = useRouter();
 
-  const handleShorten = (e:React.FormEvent) => {
+  const handleShorten = (e: React.FormEvent) => {
     e.preventDefault();
     if (longUrl) router.push(`/auth?createNew=${longUrl}`);
   };
-  
-  return <>
-     <div className="flex flex-col items-center">
-      {/* <h2 className="my-10 sm:my-16 text-3xl sm:text-6xl lg:text-7xl text-white text-center font-extrabold">
+
+  return (
+    <>
+      <div className="flex flex-col items-center">
+        {/* <h2 className="my-10 sm:my-16 text-3xl sm:text-6xl lg:text-7xl text-white text-center font-extrabold">
   The only URL Shortener <br /> you&rsquo;ll ever need! 👇
       </h2> */}
 
-
-<div className="h-[30rem] w-full rounded-md flex md:items-center md:justify-center bg-transparent antialiased bg-grid-white/[0.02] relative overflow-hidden">
-      <Spotlight
-        className="-top-40 left-0 md:left-60 md:-top-20"
-        fill="white"
-      />
-      <div className=" p-4 max-w-7xl  mx-auto relative z-10  w-full pt-20 md:pt-0">
-        <h1 className="text-4xl md:text-7xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400 bg-opacity-50">
-          Short Url&rsquo;s <br /> is the new trend.
-        </h1>
-        <div className="mt-4 font-normal text-base text-neutral-300 flex justify-center items-center text-center mx-auto">
-          {/* Spotlight effect is a great way to draw attention to a specific part
+        <div className="h-[30rem] w-full rounded-md flex md:items-center md:justify-center bg-transparent antialiased bg-grid-white/[0.02] relative overflow-hidden">
+          <Spotlight
+            className="-top-40 left-0 md:left-60 md:-top-20"
+            fill="white"
+          />
+          <div className=" p-4 max-w-7xl  mx-auto relative z-10  w-full pt-20 md:pt-0">
+            <h1 className="text-4xl md:text-7xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400 bg-opacity-50">
+              Short Url&rsquo;s <br /> is the new trend.
+            </h1>
+            <div className="mt-4 font-normal text-base text-neutral-300 flex justify-center items-center text-center mx-auto">
+              {/* Spotlight effect is a great way to draw attention to a specific part
           of the page. Here, we are drawing the attention towards the text
           section of the page. I don&apos;t know why but I&apos;m running out of
           copy. */}
-           <form
-        onSubmit={handleShorten}
-        className="sm:h-14 flex flex-col sm:flex-row w-full md:w-2/4 gap-2"
-      >
-        <Input
-          type="url"
-          placeholder="Enter your loooong URL"
-          value={longUrl}
-          onChange={(e) => setLongUrl(e.target.value)}
-          className="h-full flex-1 py-4 px-4"
-        />
-        <Button type="submit" className="h-full" variant="destructive">
-          Shorten!
-        </Button>
-      </form>
+              <form
+                onSubmit={handleShorten}
+                className="sm:h-14 flex flex-col sm:flex-row w-full md:w-2/4 gap-2"
+              >
+                <Input
+                  type="url"
+                  placeholder="Enter your loooong URL"
+                  value={longUrl}
+                  onChange={(e) => setLongUrl(e.target.value)}
+                  className="h-full flex-1 py-4 px-4"
+                />
+                <Button type="submit" className="h-full" variant="destructive">
+                  Shorten!
+                </Button>
+              </form>
+            </div>
+          </div>
         </div>
-        
-      </div>
-    </div>
 
-
-     
-      {/* <Image
+        {/* <Image
         src={banner} // replace with 2 in small screens
         className="w-full my-11 md:px-11"
         alt="banner image"
@@ -78,40 +73,39 @@ export default function Home() {
         fill={true}
       /> */}
 
+        <BentoGrid />
 
-        <BentoGrid/>
-
-
-      <Accordion type="single" collapsible className="w-full md:px-11">
-        <AccordionItem value="item-1">
-          <AccordionTrigger>
-            How does the Shawty URL shortener works?
-          </AccordionTrigger>
-          <AccordionContent>
-            When you enter a long URL, our system generates a shorter version of
-            that URL. This shortened URL redirects to the original long URL when
-            accessed.
-          </AccordionContent>
-        </AccordionItem>
-        <AccordionItem value="item-2">
-          <AccordionTrigger>
-            Do I need an account to use the app?
-          </AccordionTrigger>
-          <AccordionContent>
-            Yes. Creating an account allows you to manage your URLs, view
-            analytics, and customize your short URLs.
-          </AccordionContent>
-        </AccordionItem>
-        <AccordionItem value="item-3">
-          <AccordionTrigger>
-            What analytics are available for my shortened URLs?
-          </AccordionTrigger>
-          <AccordionContent>
-            You can view the number of clicks, geolocation data of the clicks
-            and device types (mobile/desktop) for each of your shortened URLs.
-          </AccordionContent>
-        </AccordionItem>
-      </Accordion>
-    </div>
-  </>;
+        <Accordion type="single" collapsible className="w-full md:px-11">
+          <AccordionItem value="item-1">
+            <AccordionTrigger>
+              How does the Shawty URL shortener works?
+            </AccordionTrigger>
+            <AccordionContent>
+              When you enter a long URL, our system generates a shorter version
+              of that URL. This shortened URL redirects to the original long URL
+              when accessed.
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="item-2">
+            <AccordionTrigger>
+              Do I need an account to use the app?
+            </AccordionTrigger>
+            <AccordionContent>
+              Yes. Creating an account allows you to manage your URLs, view
+              analytics, and customize your short URLs.
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="item-3">
+            <AccordionTrigger>
+              What analytics are available for my shortened URLs?
+            </AccordionTrigger>
+            <AccordionContent>
+              You can view the number of clicks, geolocation data of the clicks
+              and device types (mobile/desktop) for each of your shortened URLs.
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      </div>
+    </>
+  );
 }
