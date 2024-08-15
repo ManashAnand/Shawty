@@ -23,6 +23,7 @@ export function CreateLink() {
   const user = useAuthenticateState((state) => state.user);
   const router = useRouter();
   const ref = useRef();
+  console.log(user);
 
   const supabase = createClientComponentClient();
   const searchParams = useSearchParams();
@@ -33,6 +34,8 @@ export function CreateLink() {
     title: "",
     longUrl: longLink ? longLink : "",
     customUrl: "",
+    qr: "",
+    shorturl: "",
   });
 
   const schema = z.object({
@@ -50,23 +53,23 @@ export function CreateLink() {
 
   const uploadFile = async (blob: any) => {
     const bucket = "qr";
-    console.log(blob);
-    // if (!file) {
-    //   alert("please select file");
-    //   return;
-    // }
-    // const { data, error } = await supabase.storage
-    //   .from(bucket)
-    //   .upload(file.name, file);
+    if (!blob) {
+      alert("please select file");
+      return;
+    }
+    const fileName = `qr-${Math.random().toString(36).substr(2, 6)}`;
+    const { data, error } = await supabase.storage
+      .from(bucket)
+      .upload(fileName, blob);
 
-    // if (error) {
-    //   // @ts-ignore
-    //   setErrors(error.message);
-    //   console.log(error);
-    //   return {data:error,success: false};
-    // }
-    // console.log(data);
-    // return {data,success:true};
+    if (error) {
+      // @ts-ignore
+      setErrors(error.message);
+      console.log(error);
+      return { data: error, success: false };
+    }
+    console.log(data);
+    return { data, success: true };
   };
 
   const createNewLink = async () => {
@@ -80,18 +83,41 @@ export function CreateLink() {
       } else {
         console.log(formValues);
         if (ref && ref.current) {
-          // @ts-ignore
+          // Get the canvas and convert it to a blob
+        //   @ts-ignore
           const canvas = ref.current.canvasRef.current;
           const blob = await new Promise((resolve) => canvas.toBlob(resolve));
-            console.log(blob);
-            //  const { data, success } =
-              await uploadFile(blob);
-        //   const short_url = Math.random().toString(36).substr(2, 6);
-        //   const fileName = `qr-${short_url}`;
+          console.log(blob);
+
+          // Upload the file and get the response
+          const fileData = await uploadFile(blob);
+          if (!fileData?.success) {
+            // console.log(fileData?.error?.message);
+            // @ts-ignore
+            alert(fileData?.error?.message ?? "Same image exists");
+            return;
+          }
+          console.log(fileData);
+
+          // Generate the file path URL and short URL
+
+          // Update form values with the new QR and short URL
+          if (fileData.success) {
+            setFormValues((prevValues) => ({
+              ...prevValues,
+            //   @ts-ignore
+              qr: `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${fileData?.data?.path}`,
+              shorturl: Math.random().toString(36).substr(2, 6),
+            }));
+          }
+
+          console.log("final form values");
+          console.log(formValues);
         }
       }
     } catch (error) {
       setErrors(["Unable to create short URL"]);
+      console.error(error);
     }
   };
 
@@ -140,12 +166,12 @@ export function CreateLink() {
             onClick={createNewLink}
             // disabled={loading}
           >
-            {/* {loading ? <BeatLoader size={10} color="white" /> : "Create"} */}
+            {true ? <BeatLoader size={10} color="white" /> : "Create"}
           </Button>
           <ul className="ml-8">
-            {errors.map((item: string, index) => (
+            {/* {errors && errors.map((item: string, index) => (
               <Error key={index} message={item} />
-            ))}
+            ))} */}
           </ul>
         </DialogFooter>
       </DialogContent>
