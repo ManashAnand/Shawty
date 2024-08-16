@@ -4,6 +4,7 @@ import Link from "next/link";
 // import {deleteUrl} from "@/db/apiUrls";
 import { BeatLoader } from "react-spinners";
 import { Button } from "../ui/button";
+import Image from "next/image";
 
 interface UrlStructure {
   id: string;
@@ -44,19 +45,23 @@ const LinkCard = ({
     document.body.removeChild(anchor);
   };
 
+  console.log(url)
+
   return (
     <div className="flex flex-col md:flex-row gap-5 border p-4 bg-gray-900 rounded-lg">
-      <img
+      <Image
         src={url?.qr}
         className="h-32 object-contain ring ring-blue-500 self-start"
         alt="qr code"
+        width={150}
+        height={150}
       />
       <Link href={`/link/${url?.id}`} className="flex flex-col flex-1">
         <span className="text-3xl font-extrabold hover:underline cursor-pointer">
           {url?.title}
         </span>
         <span className="text-2xl text-blue-400 font-bold hover:underline cursor-pointer">
-          https://shawty.in/{url?.custom_url ? url?.custom_url : url.short_url}
+        {url?.custom_url ? url?.custom_url : url.short_url}
         </span>
         <span className="flex items-center gap-1 hover:underline cursor-pointer">
           <LinkIcon className="p-1" />

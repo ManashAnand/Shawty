@@ -28,17 +28,23 @@ export async function deleteUrl(id: string) {
 }
 
 interface UrlStructure {
-  id: string;
   title: string;
   qr: string;
-  custom_url?: string;
-  short_url: string;
-  original_url: string;
-  created_at: string;
+  customUrl?: string;
+  shorturl: string;
+  longUrl: string;
+  user_id: string;
 }
 
 export async function createUrl(url: UrlStructure) {
-  const { data, error } = await supabase.from("urls").insert([url]).select("*");
+  const { data, error } = await supabase.from("urls").insert({
+    title: url.title,
+    qr: url.qr,
+    custom_url: url.customUrl,
+    short_url: url.shorturl,
+    original_url: url.longUrl,
+    user_id: url.user_id,
+  }).select("*");
   if (error) {
     console.error(error.message);
     throw new Error("Unable to create short URL");

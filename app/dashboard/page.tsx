@@ -56,7 +56,7 @@ const Dashboard = () => {
     },
   });
 
-  if (isPending || clicksPending)
+  if (isPending)
     return (
       <div className="w-full flex justify-between items-center">
         <ClockLoader />;

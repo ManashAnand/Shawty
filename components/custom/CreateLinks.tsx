@@ -18,6 +18,7 @@ import { useRef, useState } from "react";
 import { z } from "zod";
 import Error from "./Error";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { createUrl } from "@/actions/apiUrls";
 
 export function CreateLink() {
   const user = useAuthenticateState((state) => state.user);
@@ -31,6 +32,7 @@ export function CreateLink() {
 
   const [errors, setErrors] = useState<string[]>([]);
   const [formValues, setFormValues] = useState({
+    user_id:user?.user?.id ?? "",
     title: "",
     longUrl: longLink ? longLink : "",
     customUrl: "",
@@ -106,13 +108,17 @@ export function CreateLink() {
             setFormValues((prevValues) => ({
               ...prevValues,
             //   @ts-ignore
-              qr: `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${fileData?.data?.path}`,
+              qr: `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/qr/${fileData?.data?.path}`,
               shorturl: Math.random().toString(36).substr(2, 6),
+              user_id: user?.user?.id ,
             }));
+            // console.log(formValues)
           }
 
-          console.log("final form values");
-          console.log(formValues);
+          // console.log("final form values");
+          // console.log(formValues);
+          const data =  await createUrl(formValues);
+          console.log(data)
         }
       }
     } catch (error) {
