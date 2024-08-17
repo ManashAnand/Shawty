@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/custom/Header";
 import Tanstack from "@/Wrapper/TanstackWrapper";
+import { Toaster } from "@/components/ui/sonner"
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,11 +25,13 @@ export default function RootLayout({
             <main className="min-h-screen container ">
               <Header />
               {children}
+              <Toaster />
             </main>
           </div>
           <div className="p-10 text-center bg-gray-800  text-white">
             Made with 💗 by Manash Anand
           </div>
+          
         </Tanstack>
       </body>
     </html>

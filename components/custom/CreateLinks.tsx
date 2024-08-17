@@ -19,6 +19,8 @@ import { z } from "zod";
 import Error from "./Error";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { createUrl } from "@/actions/apiUrls";
+import { toast } from "sonner";
+
 
 export function CreateLink() {
   const user = useAuthenticateState((state) => state.user);
@@ -96,7 +98,7 @@ export function CreateLink() {
           if (!fileData?.success) {
             // console.log(fileData?.error?.message);
             // @ts-ignore
-            alert(fileData?.error?.message ?? "Same image exists");
+            toast(fileData?.error?.message ?? "Same image exists");
             return;
           }
           console.log(fileData);
@@ -113,12 +115,14 @@ export function CreateLink() {
               user_id: user?.user?.id ,
             }));
             // console.log(formValues)
+            if(formValues.qr && formValues.shorturl){
+            const data =  await createUrl(formValues);
+            console.log(data)
+            }
           }
 
           // console.log("final form values");
           // console.log(formValues);
-          const data =  await createUrl(formValues);
-          console.log(data)
         }
       }
     } catch (error) {

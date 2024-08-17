@@ -75,7 +75,7 @@ export default function Home() {
 
         <BentoGrid />
 
-        <Accordion type="single" collapsible className="w-full md:px-11">
+        <Accordion type="single" collapsible className="w-full md:px-11 rounded-xl  rounded-xlw-full  border border-zinc-700 bg-zinc-800 px-3 py-1.5 transition-colors focus:border-red-300 focus:outline-0 ">
           <AccordionItem value="item-1">
             <AccordionTrigger>
               How does the Shawty URL shortener works?

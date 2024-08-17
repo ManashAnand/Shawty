@@ -2,6 +2,8 @@
 import { createClient } from "@/utils/supabase/server";
 import { cookies } from "next/headers";
 
+import { toast } from "sonner"
+
 const cookieStore = cookies();
 const supabase = createClient(cookieStore);
 
@@ -46,7 +48,8 @@ export async function createUrl(url: UrlStructure) {
     user_id: url.user_id,
   }).select("*");
   if (error) {
-    console.error(error.message);
+    console.log(error.message);
+
     throw new Error("Unable to create short URL");
   }
   return data;
