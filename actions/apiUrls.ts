@@ -47,10 +47,13 @@ export async function createUrl(url: UrlStructure) {
     original_url: url.longUrl,
     user_id: url.user_id,
   }).select("*");
-  if (error) {
-    console.log(error.message);
-
-    throw new Error("Unable to create short URL");
+  if (error ) {
+    console.log(error);
+    // @ts-ignore
+    const errorObject = {message:error.message,success: false};
+    return errorObject
   }
-  return data;
+  // @ts-ignore
+    const dataObject = {data,success: true};
+  return dataObject;
 }

@@ -21,7 +21,6 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { createUrl } from "@/actions/apiUrls";
 import { toast } from "sonner";
 
-
 export function CreateLink() {
   const user = useAuthenticateState((state) => state.user);
   const router = useRouter();
@@ -34,12 +33,10 @@ export function CreateLink() {
 
   const [errors, setErrors] = useState<string[]>([]);
   const [formValues, setFormValues] = useState({
-    user_id:user?.user?.id ?? "",
+    user_id: user?.user?.id ?? "",
     title: "",
     longUrl: longLink ? longLink : "",
     customUrl: "",
-    qr: "",
-    shorturl: "",
   });
 
   const schema = z.object({
@@ -69,7 +66,7 @@ export function CreateLink() {
     if (error) {
       // @ts-ignore
       setErrors(error.message);
-      console.log(error);
+      // console.log(error);
       return { data: error, success: false };
     }
     console.log(data);
@@ -83,46 +80,34 @@ export function CreateLink() {
       if (!result.success) {
         const errorMessages = result.error.errors.map((err) => err.message);
         setErrors(errorMessages);
-        console.log(errorMessages);
       } else {
-        console.log(formValues);
         if (ref && ref.current) {
-          // Get the canvas and convert it to a blob
-        //   @ts-ignore
+          //   @ts-ignore
           const canvas = ref.current.canvasRef.current;
           const blob = await new Promise((resolve) => canvas.toBlob(resolve));
-          console.log(blob);
-
-          // Upload the file and get the response
+          
           const fileData = await uploadFile(blob);
-          if (!fileData?.success) {
-            // console.log(fileData?.error?.message);
+          // console.log(fileData);
+          if (  fileData  && !fileData.success) {
             // @ts-ignore
             toast(fileData?.error?.message ?? "Same image exists");
             return;
           }
-          console.log(fileData);
-
-          // Generate the file path URL and short URL
-
-          // Update form values with the new QR and short URL
-          if (fileData.success) {
-            setFormValues((prevValues) => ({
-              ...prevValues,
-            //   @ts-ignore
-              qr: `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/qr/${fileData?.data?.path}`,
-              shorturl: Math.random().toString(36).substr(2, 6),
-              user_id: user?.user?.id ,
-            }));
-            // console.log(formValues)
-            if(formValues.qr && formValues.shorturl){
-            const data =  await createUrl(formValues);
-            console.log(data)
-            }
+          const shorturl = Math.random().toString(36).substr(2, 6);
+          // @ts-ignore
+          const qr = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${fileData.data?.fullPath}`;   
+          console.log(formValues)
+          // @ts-ignore
+          const urlObj = {...formValues, qr, shorturl};
+          const response = await createUrl(urlObj);
+          console.log(response);
+          if(response && response.success){
+            // router.push(`/link/${response.data[0].id}`);
+            toast("Short URL created successfully");
+          }else{
+            // @ts-ignore
+            toast( response.message || "Unable to create short URL");
           }
-
-          // console.log("final form values");
-          // console.log(formValues);
         }
       }
     } catch (error) {

@@ -27,9 +27,6 @@ const LinkCard = ({
   deleteFn: (id: string) => void;
   isDeleting: Boolean;
 }) => {
-
-  
-
   const downloadImage = () => {
     const imageUrl = url?.qr;
     const fileName = url?.title;
@@ -45,7 +42,7 @@ const LinkCard = ({
     document.body.removeChild(anchor);
   };
 
-  console.log(url)
+  // console.log(url)
 
   return (
     <div className="flex flex-col md:flex-row gap-5 border p-4 bg-gray-900 rounded-lg">
@@ -61,11 +58,11 @@ const LinkCard = ({
           {url?.title}
         </span>
         <span className="text-2xl text-blue-400 font-bold hover:underline cursor-pointer">
-        {url?.custom_url ? url?.custom_url : url.short_url}
+          {url?.custom_url ? url?.custom_url : url.short_url}
         </span>
-        <span className="flex items-center gap-1 hover:underline cursor-pointer">
+        <span className="flex items-center gap-1 hover:underline cursor-pointer text-wrap flex-wrap">
           <LinkIcon className="p-1" />
-          {url?.original_url}
+          <span className="flex flex-wrap w-auto">{url?.original_url}</span>
         </span>
         <span className="flex items-end font-extralight text-sm flex-1">
           {new Date(url?.created_at).toLocaleString()}
@@ -86,7 +83,7 @@ const LinkCard = ({
         <Button
           variant="ghost"
           onClick={() => deleteFn(url.id)}
-        //   disabled={isDeleting}
+          //   disabled={isDeleting}
         >
           {isDeleting ? <BeatLoader size={5} color="white" /> : <Trash />}
         </Button>
