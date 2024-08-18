@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -11,36 +11,57 @@ import {
 
 import { Input } from "@/components/ui/input";
 import { Button } from "../ui/button";
-import { getLeetCodeStats } from "@/actions/extraLinks";
+import { getLeetCodeStats, putLeetCodeStats } from "@/actions/extraLinks";
 import { toast } from "sonner";
 import { useAuthenticateState } from "@/actions/zustand";
+import { LeetCodeInterface } from "@/actions/interfaces";
+import { SiLeetcode } from "react-icons/si";
+import { useRouter } from "next/navigation";
+import { ViewIcon } from "lucide-react";
 
 const Leetcode = () => {
   const [username, setUsername] = useState("");
   const [loading, setLoading] = useState(false);
+  const [leetCode, setLeetCode] = useState<LeetCodeInterface | null>(null);
   const user = useAuthenticateState((state) => state.user);
+  const router = useRouter();
 
   const handleConnect = async () => {
-    // console.log(username);
     setLoading(true);
-    const resLeet = await getLeetCodeStats(username,user?.user?.id);
+    const resLeet = await putLeetCodeStats(username, user?.user?.id);
     // console.log(data)
-    if(resLeet && !resLeet.success){
-        // @ts-ignore
-        toast(resLeet?.errorMessage)
-        setLoading(false);
-        return;
+    if (resLeet && !resLeet.success) {
+      // @ts-ignore
+      toast(resLeet?.errorMessage);
+      setLoading(false);
+      return;
     }
     toast("Leetcode credentials added successfully");
     setLoading(false);
-    
-
   };
+
+  useEffect(() => {
+    async function fetchLeetCodeStats() {
+      const LeetData = await getLeetCodeStats(user?.user?.id);
+      console.log(LeetData);
+      if (LeetData.success) {
+        console.log(LeetData);
+        // @ts-ignore
+        setLeetCode(LeetData.data);
+      }
+    }
+
+    fetchLeetCodeStats();
+  }, []);
+
   return (
     <>
-      <Dialog >
+      <Dialog>
         <DialogTrigger>
-          <Button className="font-bold">Leetcode</Button>
+          <Button className="font-bold">
+            <SiLeetcode />
+            <span className="ml-2">Leetcode</span>
+          </Button>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
@@ -49,6 +70,7 @@ const Leetcode = () => {
               <Input
                 placeholder="Enter your Leetcode profile Username"
                 className="mt-6"
+                value={username}
                 onChange={(e) => setUsername(e.target.value)}
               />
             </DialogDescription>
@@ -56,13 +78,16 @@ const Leetcode = () => {
               This action cannot be undone.
             </span>
           </DialogHeader>
-          <div className="flex gap-2">
-            <Button className="mt-4 w-32" onClick={handleConnect}>
-              {loading? "Loading...":"Connect"}
-              
+          <div className="flex gap-2  items-center justify-between">
+            <Button className=" w-32" onClick={handleConnect}>
+              {loading ? "Loading..." : leetCode?.id ? "Regenerate" : "Connect"}
             </Button>
-            <Button className="mt-4 w-32" variant={"ghost"}>
-              Regenerate
+            <Button
+              variant={"ghost"}
+              onClick={() => router.push(`/leetcode/${leetCode?.id}`)}
+            >
+              <ViewIcon />
+              <span className="ml-2">View</span>
             </Button>
           </div>
         </DialogContent>

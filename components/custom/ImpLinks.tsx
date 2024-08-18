@@ -1,12 +1,15 @@
-import React from 'react'
-import Leetcode from './Leetcode'
+
+import React from "react";
+import Leetcode from "./Leetcode";
+
 
 const ImpLinks = () => {
+
   return (
     <>
-        <Leetcode/>
+      <Leetcode  />
     </>
-  )
-}
+  );
+};
 
-export default ImpLinks
+export default ImpLinks;

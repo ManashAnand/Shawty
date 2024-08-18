@@ -26,7 +26,6 @@ const Header = () => {
     (state) => state.ToogleAuth
   );
   const user = useAuthenticateState((state) => state.user);
-  console.log(user);
   return (
     <>
       <nav className="py-4 flex justify-between items-center">
