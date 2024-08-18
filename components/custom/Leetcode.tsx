@@ -65,7 +65,7 @@ const Leetcode = () => {
       // console.log(error);
       return { data: error, success: false };
     }
-    console.log(data);
+    // console.log(data);
     return { data, success: true };
   };
 
@@ -105,9 +105,9 @@ const Leetcode = () => {
   useEffect(() => {
     async function fetchLeetCodeStats() {
       const LeetData = await getLeetCodeStats(user?.user?.id);
-      console.log(LeetData);
+    //   console.log(LeetData);
       if (LeetData.success) {
-        console.log(LeetData);
+        // console.log(LeetData);
         // @ts-ignore
         setLeetCode(LeetData.data);
       }
