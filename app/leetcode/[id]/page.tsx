@@ -22,9 +22,9 @@ const LeetcodePerPerson = () => {
     queryFn: () => getLeetCodeStats(id),
   });
 
+  const router = useRouter();
   if (isPending) return <div>Loading...</div>;
   if (error) {
-    const router = useRouter();
     router.push("/auth");
     return (
       <>Sorry there was an error fetching the data. Please try again later.</>
