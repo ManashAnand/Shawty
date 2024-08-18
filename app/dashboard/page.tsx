@@ -13,6 +13,7 @@ import LinkCard from "@/components/custom/LinkCard";
 
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { CreateLink } from "@/components/custom/CreateLinks";
+import ImpLinks from "@/components/custom/ImpLinks";
 
 const Dashboard = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -95,6 +96,9 @@ const Dashboard = () => {
           <>
             <CreateLink/>
           </>
+        </div>
+        <div className="">
+          <ImpLinks/>
         </div>
         <div className="relative">
           <Input
