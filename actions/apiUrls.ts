@@ -117,3 +117,18 @@ export const storeClicks = async({id,original_url}: {id: string, original_url: s
   }
 
 }
+
+export async function getUrlById(id: string) {
+  const { data, error } = await supabase
+    .from("urls")
+    .select("*")
+    .eq("id", id)
+    .single();
+  if (error) {
+    console.log(error)
+    const errorObject = { message: error.message, success: false };
+    return errorObject;
+  }
+  const dataObject = { data, success: true };
+  return dataObject;
+}

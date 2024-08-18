@@ -5,7 +5,8 @@ import { cookies } from "next/headers";
 const cookieStore = cookies();
 const supabase = createClient(cookieStore);
 
-export async function getClicksForUrl(url_ids: string[]) {
+export async function getClicksForUrl(url_ids: string[] ) {
+  console.log(url_ids)
     const { data, error } = await supabase
       .from("clicks")
       .select("*")
