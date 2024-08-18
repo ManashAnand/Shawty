@@ -25,7 +25,7 @@ export function CreateLink() {
   const user = useAuthenticateState((state) => state.user);
   const router = useRouter();
   const ref = useRef();
-  console.log(user);
+  // console.log(user);
   const [loading, setLoading] = useState(false);
   const supabase = createClientComponentClient();
   const searchParams = useSearchParams();

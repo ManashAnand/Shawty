@@ -6,7 +6,7 @@ import { createClient } from "@/utils/supabase/server";
 const cookieStore = cookies();
 const supabase = createClient(cookieStore);
 
-export async function putLeetCodeStats(username: string, user_id: string) {
+export async function putLeetCodeStats(username: string, user_id: string,qr:string) {
   const data = await fetch(
     `https://leetcode-stats-api.herokuapp.com/${username}`
   );
@@ -23,6 +23,8 @@ export async function putLeetCodeStats(username: string, user_id: string) {
         hard_solved: res.hardSolved,
         acceptance_rate: res.acceptanceRate,
         user_id: user_id,
+        leetcode_url: `https://leetcode.com/${username}`,
+        leetcode_qr:qr
       })
       .select("*");
     if (error) {
