@@ -28,7 +28,7 @@ export default function DeviceStats({stats = []}: {stats: stats[]}) {
     // @ts-ignore
     count: deviceCount[device],
   }));
-
+console.log(result)
   return (
     <div style={{width: "100%", height: 300}}>
       <ResponsiveContainer>

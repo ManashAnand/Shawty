@@ -11,7 +11,7 @@ import {
 
 import { Input } from "@/components/ui/input";
 import { Button } from "../ui/button";
-import { getLeetCodeStats, putLeetCodeStats } from "@/actions/extraLinks";
+import { getLeetCodeStats, putLeetCodeStats, updateLeetCodeStats } from "@/actions/extraLinks";
 import { toast } from "sonner";
 import { useAuthenticateState } from "@/actions/zustand";
 import { LeetCodeInterface } from "@/actions/interfaces";
@@ -25,6 +25,20 @@ const Leetcode = () => {
   const [leetCode, setLeetCode] = useState<LeetCodeInterface | null>(null);
   const user = useAuthenticateState((state) => state.user);
   const router = useRouter();
+
+  const handleUpdate = async () => {
+    setLoading(true);
+    const resLeet = await updateLeetCodeStats(username, user?.user?.id);
+    // console.log(data)
+    if (resLeet && !resLeet.success) {
+      // @ts-ignore
+      toast(resLeet?.errorMessage);
+      setLoading(false);
+      return;
+    }
+    toast("Leetcode credentials updated successfully");
+    setLoading(false);
+  };
 
   const handleConnect = async () => {
     setLoading(true);
@@ -79,12 +93,18 @@ const Leetcode = () => {
             </span>
           </DialogHeader>
           <div className="flex gap-2  items-center justify-between">
-            <Button className=" w-32" onClick={handleConnect}>
-              {loading ? "Loading..." : leetCode?.id ? "Regenerate" : "Connect"}
+            <Button className=" w-32" onClick={leetCode?.id ? handleUpdate:handleConnect}>
+              {loading ? (
+                "Loading..."
+              ) : leetCode?.id ? (
+                  <Button>Regenerate</Button>
+                ) : (
+                  <Button>Connect</Button>
+              )}
             </Button>
             <Button
               variant={"ghost"}
-              onClick={() => router.push(`/leetcode/${leetCode?.id}`)}
+              onClick={() => router.push(`/leetcode/${leetCode?.user_id}`)}
             >
               <ViewIcon />
               <span className="ml-2">View</span>
