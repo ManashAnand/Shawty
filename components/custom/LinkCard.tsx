@@ -42,7 +42,7 @@ const LinkCard = ({
     document.body.removeChild(anchor);
   };
 
-  // console.log(url)
+  console.log(url)
 
   return (
     <div className="flex flex-col md:flex-row gap-5 border p-4 bg-gray-900 rounded-lg">

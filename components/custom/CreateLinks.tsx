@@ -120,6 +120,12 @@ export function CreateLink() {
     <Dialog
       // @ts-ignore
       defaultOpen={longLink ? longLink : false}
+      onOpenChange={(isOpen) => {
+        if(!isOpen){
+          console.log("Modal closed")
+          router.refresh()
+        }
+      }}
     >
       <DialogTrigger asChild>
         <Button variant="destructive">Create New Link</Button>

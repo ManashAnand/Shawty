@@ -10,7 +10,6 @@ import { useAuthenticateState } from "@/actions/zustand";
 import { useRouter } from "next/navigation";
 import { getClicksForUrl } from "@/actions/apiClicks";
 import LinkCard from "@/components/custom/LinkCard";
-import { Button } from "@/components/ui/button";
 
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { CreateLink } from "@/components/custom/CreateLinks";
@@ -68,26 +67,7 @@ const Dashboard = () => {
     url.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const uploadFile = async (file: any) => {
-    const bucket = "qr";
-    console.log(file);
-    if (!file) {
-      alert("please select file");
-      return;
-    }
-    const { data, error } = await supabase.storage
-      .from(bucket)
-      .upload(file.name, file);
 
-    if (error) {
-      // @ts-ignore
-      setErrors(error.message);
-      console.log(error);
-      return {data:error,success: false};
-    }
-    console.log(data);
-    return {data,success:true};
-  };
 
   return (
     <>
