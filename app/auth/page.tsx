@@ -32,7 +32,7 @@ const Auth = () => {
           <TabsTrigger value="signup">Signup</TabsTrigger>
         </TabsList>
         <TabsContent value="login">
-          {/* <Login /> */}
+          <Login />
         </TabsContent>
         <TabsContent value="signup">
           <Signup />
