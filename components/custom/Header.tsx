@@ -50,7 +50,7 @@ const Header = () => {
                     src={user?.user?.user_metadata?.profile_pic || ""}
                     className="rounded-full overflow-hidden object-contain"
                   />
-                  <AvatarFallback>PA</AvatarFallback>
+                  {/* <AvatarFallback>PA</AvatarFallback> */}
                 </Avatar>
               </DropdownMenuTrigger>
               <DropdownMenuContent>

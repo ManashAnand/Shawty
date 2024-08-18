@@ -1,6 +1,6 @@
 "use client";
 import { getClicksForUrl } from "@/actions/apiClicks";
-import { getUrlById } from "@/actions/apiUrls";
+import { deleteUrl, getUrlById } from "@/actions/apiUrls";
 import DeviceStats from "@/components/custom/DeviceStats";
 import Location from "@/components/custom/Location";
 // import DeviceStats from "@/components/device-stats";
@@ -12,7 +12,7 @@ import { useQuery } from "@tanstack/react-query";
 // import {deleteUrl, getUrl} from "@/db/apiUrls";
 import { Copy, Download, LinkIcon, Trash } from "lucide-react";
 import Image from "next/image";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { BarLoader, BeatLoader } from "react-spinners";
 import { toast } from "sonner";
@@ -61,40 +61,17 @@ const Analytics = () => {
     document.body.removeChild(anchor);
     toast("Downloaded Image")
   };
-  //   const navigate = useNavigate();
-  //   const {user} = UrlState();
-  //   const {id} = useParams();
-  //   const {
-  //     loading,
-  //     data: url,
-  //     fn,
-  //     error,
-  //   } = useFetch(getUrl, {id, user_id: user?.id});
 
-  //   const {
-  //     loading: loadingStats,
-  //     data: stats,
-  //     fn: fnStats,
-  //   } = useFetch(getClicksForUrl, id);
+    const router = useRouter()
+  const [deleteLoading,setDeleteLoading] = useState<Boolean>(false);
+  const handleDelete = async (id:string) => {
+    setDeleteLoading(true);
+        await deleteUrl(id);
 
-  //   const {loading: loadingDelete, fn: fnDelete} = useFetch(deleteUrl, id);
-
-  //   useEffect(() => {
-  //     fn();
-  //   }, []);
-
-  //   useEffect(() => {
-  //     if (!error && loading === false) fnStats();
-  //   }, [loading, error]);
-
-  //   if (error) {
-  //     navigate("/dashboard");
-  //   }
-
-  //   let link = "";
-  //   if (url) {
-  //     link = url?.custom_url ? url?.custom_url : url.short_url;
-  //   }
+    setDeleteLoading(false);
+    router.push('/dashboard')
+    toast("Url Deleted")
+}
 
   return (
     <>
@@ -142,15 +119,9 @@ const Analytics = () => {
             </Button>
             <Button
               variant="ghost"
-              onClick={() =>
-                // fnDelete().then(() => {
-                //   navigate("/dashboard");
-                // })
-                {}
-              }
-              //   disable={loadingDelete}
+              onClick={() => handleDelete(UserData?.url?.id)}
             >
-              {false ? <BeatLoader size={5} color="white" /> : <Trash />}
+              {deleteLoading ? <BeatLoader size={5} color="white" /> : <Trash />}
             </Button>
           </div>
           <Image
@@ -178,7 +149,6 @@ const Analytics = () => {
               </Card>
 
               <CardTitle>Location Data</CardTitle>
-              {/* @ts-ignore */}
               <Location stats={UserData?.clicks } />
               <CardTitle>Device Info</CardTitle>
               <DeviceStats stats={UserData?.clicks} />
@@ -187,7 +157,7 @@ const Analytics = () => {
             <CardContent>
               {
                 //   loadingStats === false
-                true ? "No Statistics yet" : "Loading Statistics.."
+                "No Statistics yet" 
               }
             </CardContent>
           )}
