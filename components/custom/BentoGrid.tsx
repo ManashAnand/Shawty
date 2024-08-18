@@ -71,7 +71,7 @@ const HeaderBlock = () => (
       className="mb-4 size-14 rounded-full"
     />
     <h1 className="mb-12 text-4xl font-medium leading-tight">
-      Hi, I'm Manash.{" "}
+      Hi, I&apos;m Manash.{" "}
       <span className="text-zinc-400">
         I build cool websites like this one.
       </span>
@@ -123,7 +123,7 @@ const SocialsBlock = () => (
       className="col-span-6 bg-zinc-50 md:col-span-3"
     >
       <Link
-        href="https://medium.com/@anandmanash321/followers"
+        href="https://medium.com/@anandmanash321"
         className="grid h-full place-content-center text-3xl text-black"
       >
         <SiMedium />
@@ -152,7 +152,7 @@ const AboutBlock = () => (
       My passion is building cool stuff.{" "}
       <span className="text-zinc-400">
         I deal primarily with full Stack. I love
-        this stack so much that I have built ton of website . I've work with over
+        this stack so much that I have built ton of website . I&apos;ve work with over
         4 enterprise on this subject across globe .
       </span>
     </p>

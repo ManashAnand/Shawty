@@ -152,7 +152,7 @@ const Signup = () => {
       <CardHeader>
         <CardTitle>Signup</CardTitle>
         <CardDescription>
-          Create a new account if you haven't already
+          Create a new account if you haven&apos;t already
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-2">

@@ -27,10 +27,6 @@ export default function Home() {
   return (
     <>
       <div className="flex flex-col items-center">
-        {/* <h2 className="my-10 sm:my-16 text-3xl sm:text-6xl lg:text-7xl text-white text-center font-extrabold">
-  The only URL Shortener <br /> you&rsquo;ll ever need! 👇
-      </h2> */}
-
         <div className="h-[30rem] w-full rounded-md flex md:items-center md:justify-center bg-transparent antialiased bg-grid-white/[0.02] relative overflow-hidden">
           <Spotlight
             className="-top-40 left-0 md:left-60 md:-top-20"
@@ -41,10 +37,6 @@ export default function Home() {
               Short Url&rsquo;s <br /> is the new trend.
             </h1>
             <div className="mt-4 font-normal text-base text-neutral-300 flex justify-center items-center text-center mx-auto">
-              {/* Spotlight effect is a great way to draw attention to a specific part
-          of the page. Here, we are drawing the attention towards the text
-          section of the page. I don&apos;t know why but I&apos;m running out of
-          copy. */}
               <form
                 onSubmit={handleShorten}
                 className="sm:h-14 flex flex-col sm:flex-row w-full md:w-2/4 gap-2"
@@ -75,7 +67,11 @@ export default function Home() {
 
         <BentoGrid />
 
-        <Accordion type="single" collapsible className="w-full md:px-11 rounded-xl  rounded-xlw-full  border border-zinc-700 bg-zinc-800 px-3 py-1.5 transition-colors focus:border-red-300 focus:outline-0 ">
+        <Accordion
+          type="single"
+          collapsible
+          className="w-full md:px-11 rounded-xl  rounded-xlw-full  border border-zinc-700 bg-zinc-800 px-3 py-1.5 transition-colors focus:border-red-300 focus:outline-0 "
+        >
           <AccordionItem value="item-1">
             <AccordionTrigger>
               How does the Shawty URL shortener works?

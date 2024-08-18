@@ -48,7 +48,7 @@ const Dashboard = () => {
   });
 
   const { mutate: deleteFn, isPending: isDeleting } = useMutation({
-    mutationFn: (id: string) => deleteUrl(id), // Pass the id here
+    mutationFn: (id: string) => deleteUrl(id), 
     onSuccess: () => {
       // @ts-ignore
       queryClient.invalidateQueries(["repoData", userId]);

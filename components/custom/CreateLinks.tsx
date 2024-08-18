@@ -26,7 +26,7 @@ export function CreateLink() {
   const router = useRouter();
   const ref = useRef();
   console.log(user);
-
+  const [loading, setLoading] = useState(false);
   const supabase = createClientComponentClient();
   const searchParams = useSearchParams();
   const longLink = searchParams.get("longLink");
@@ -75,42 +75,54 @@ export function CreateLink() {
 
   const createNewLink = async () => {
     setErrors([]);
+    setLoading(true);
     try {
       const result = schema.safeParse(formValues);
       if (!result.success) {
         const errorMessages = result.error.errors.map((err) => err.message);
         setErrors(errorMessages);
+        setLoading(false);
       } else {
         if (ref && ref.current) {
           //   @ts-ignore
           const canvas = ref.current.canvasRef.current;
           const blob = await new Promise((resolve) => canvas.toBlob(resolve));
-          
+
           const fileData = await uploadFile(blob);
           // console.log(fileData);
-          if (  fileData  && !fileData.success) {
+          if (fileData && !fileData.success) {
             // @ts-ignore
             toast(fileData?.error?.message ?? "Same image exists");
+
+            setLoading(false);
             return;
           }
           const shorturl = Math.random().toString(36).substr(2, 6);
           // @ts-ignore
-          const qr = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${fileData.data?.fullPath}`;   
-          console.log(formValues)
+          const qr = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${fileData.data?.fullPath}`;
+          console.log(formValues);
           // @ts-ignore
-          const urlObj = {...formValues, qr, shorturl};
+          const urlObj = { ...formValues, qr, shorturl };
           const response = await createUrl(urlObj);
           console.log(response);
-          if(response && response.success){
+          if (response && response.success) {
             // router.push(`/link/${response.data[0].id}`);
             toast("Short URL created successfully");
-          }else{
+
+            setLoading(false);
+          } else {
             // @ts-ignore
-            toast( response.message || "Unable to create short URL");
+            toast(response.message || "Unable to create short URL");
+
+            setLoading(false);
           }
         }
       }
+      
+      setLoading(false)
     } catch (error) {
+      
+      setLoading(false)
       setErrors(["Unable to create short URL"]);
       console.error(error);
     }
@@ -121,9 +133,9 @@ export function CreateLink() {
       // @ts-ignore
       defaultOpen={longLink ? longLink : false}
       onOpenChange={(isOpen) => {
-        if(!isOpen){
-          console.log("Modal closed")
-          router.refresh()
+        if (!isOpen) {
+          console.log("Modal closed");
+          router.refresh();
         }
       }}
     >
@@ -167,7 +179,7 @@ export function CreateLink() {
             onClick={createNewLink}
             // disabled={loading}
           >
-            {true ? <BeatLoader size={10} color="white" /> : "Create"}
+            {loading ? <BeatLoader size={10} color="white" /> : "Create"}
           </Button>
           <ul className="ml-8">
             {/* {errors && errors.map((item: string, index) => (
