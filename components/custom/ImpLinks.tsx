@@ -2,6 +2,7 @@
 import React from "react";
 import Leetcode from "./Leetcode";
 import Github from "./Github";
+import CodeForce from "./CodeForce";
 
 
 const ImpLinks = () => {
@@ -12,6 +13,7 @@ const ImpLinks = () => {
 
       <Leetcode  />
       <Github />
+      <CodeForce/>
     </div>
     </>
   );
