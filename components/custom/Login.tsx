@@ -21,8 +21,6 @@ import { useAuthenticateState } from "@/actions/zustand";
 const Login = () => {
   const router = useRouter();
 
-  const searchParams = useSearchParams();
-  const longLink = searchParams.get("createNew");
   interface FormData {
     email: string;
     password: string;
@@ -96,7 +94,7 @@ const Login = () => {
         ToggleAuthenitcation(true);
         console.log(response.data);
         ToogleUser(response.data);
-        router.push(`/dashboard?${longLink ? `createNew=${longLink}` : ""}`);
+        router.push(`/dashboard`);
       } catch (error) {
         console.log("An unexpected error occurred:", error);
       }
