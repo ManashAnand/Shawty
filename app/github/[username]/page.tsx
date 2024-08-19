@@ -132,7 +132,7 @@ const GithubStatPage: React.FC = () => {
                       <Link2Icon />
                       <Link
                         href={
-                          `https://github.com/ManashAnand/${item?.name}` || ""
+                          `https://github.com/${username}/${item?.name}` || ""
                         }
                       >
                         Repo Link
